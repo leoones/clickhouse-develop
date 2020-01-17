@@ -20,7 +20,7 @@ engine = MergeTree
 partition by toYYYYMM(event_time)
 order by (user_id, event_name) ;
 
--- 开启实时 stream
+--一个client session 开启实时 stream
 set allow_experimental_live_view = 1;
 drop table lv_latest_time_user;
 CREATE LIVE VIEW lv_latest_time_user AS
@@ -34,6 +34,6 @@ order by event_time desc limit 5;
 -- 向事件表插入数据
 insert into t_event_log(user_id, event_time, event_name, ip, properties) values ('user_23',  now(), 'visit', '168.30.16.104', '{"url": "http://www.baidu.com"}');
 
-
-select * from t_event_log order by event_time desc ;
+ --再开启一个client session
+ watch lv_latest_time_user
 
