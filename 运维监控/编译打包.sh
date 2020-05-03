@@ -9,6 +9,13 @@ npm run buid
 
 nrm use taobao
 
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+cnpm cache clean --force
+
+sudo cnpm install
+
+sudo cnpm build
 
 ------------------------------------------------------- java  -----------------------------------------------------------------------
 mvn clean package -DskipTests -Prelease
