@@ -15,7 +15,7 @@ cnpm cache clean --force
 
 sudo cnpm install
 
-sudo cnpm build
+sudo cnpm run build
 
 ------------------------------------------------------- java  -----------------------------------------------------------------------
 mvn clean package -DskipTests -Prelease
