@@ -62,14 +62,58 @@ with (
     select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s1
     from dw_hr.fct_sale_shop_good_vender_day fssgvd
     where fssgvd.hsday = toDate('2020-05-04')
-) as  day1,
-(
-    select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
-    from dw_hr.fct_sale_shop_good_vender_day fssgvd
-    where fssgvd.hsday = toDate('2020-05-03')
-) as day2
-select
-       bitmapCardinality(day1) as `当日`,
-       bitmapAndCardinality(day1, day2) as `留存`,
-       bitmapAndnotCardinality(day1, day2) as `流失`
-  
+) as current_day,
+    (
+        select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
+        from dw_hr.fct_sale_shop_good_vender_day fssgvd
+        where fssgvd.hsday =  subtractDays( toDate('2020-05-04'), 1)
+    ) as day1,
+   (
+       select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
+        from dw_hr.fct_sale_shop_good_vender_day fssgvd
+        where fssgvd.hsday =  subtractDays( toDate('2020-05-04'), 2)
+    ) as day2,
+   (
+       select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
+        from dw_hr.fct_sale_shop_good_vender_day fssgvd
+        where fssgvd.hsday =  subtractDays( toDate('2020-05-04'), 3)
+    ) as day3,
+   (
+     select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
+        from dw_hr.fct_sale_shop_good_vender_day fssgvd
+        where fssgvd.hsday =  subtractDays( toDate('2020-05-04'), 6)
+    ) as day6,
+  (
+       select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
+        from dw_hr.fct_sale_shop_good_vender_day fssgvd
+        where fssgvd.hsday =  subtractDays( toDate('2020-05-04'), 15)
+    ) as day15,
+  (
+     select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
+        from dw_hr.fct_sale_shop_good_vender_day fssgvd
+        where fssgvd.hsday =  subtractDays( toDate('2020-05-04'), 30)
+    ) as day30
+select bitmapCardinality(current_day)             as `当日`,
+       bitmapAndCardinality(current_day, day1)    as `1日留存`,
+       bitmapAndnotCardinality(current_day, day1) as `1日流失`,
+       `1日留存` / `当日` as `1日留存率`,
+
+       bitmapAndCardinality(current_day, day2)    as `2日留存`,
+       bitmapAndnotCardinality(current_day, day2) as `2日流失`,
+       `2日留存` / `当日` as `2日留存率`,
+
+       bitmapAndCardinality(current_day, day3)    as `3日留存`,
+       bitmapAndnotCardinality(current_day, day3) as `3日流失`,
+       `3日留存` / `当日` as `3日留存率`,
+
+       bitmapAndCardinality(current_day, day6)    as `6日留存`,
+       bitmapAndnotCardinality(current_day, day6) as `6日流失`,
+       `6日留存` / `当日` as `6日留存率`,
+
+       bitmapAndCardinality(current_day, day15)    as `15日留存`,
+       bitmapAndnotCardinality(current_day, day15) as `15日流失`,
+       `15日留存` / `当日` as `15日留存率`,
+
+       bitmapAndCardinality(current_day, day30)    as `30日留存`,
+       bitmapAndnotCardinality(current_day, day30) as `30日流失`,
+       `30日留存` / `当日` as `30日留存率`
