@@ -31,7 +31,7 @@ values
       
       
       
-
+-------------------------------------------------------------------方案1-------------------------------------------------------------------
 -- 1 , 2, 3, 6 , 15, 30留存
 select sum(retentions[1]) as registers,
        sum(retentions[2]) as first,
@@ -54,4 +54,22 @@ from
 where tlc.loginday >= '2019-02-10'
 group by  tlc.useid
     );
+    
+    
+    
+-------------------------------------------------------------------方案2-------------------------------------------------------------------    
+with (
+    select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s1
+    from dw_hr.fct_sale_shop_good_vender_day fssgvd
+    where fssgvd.hsday = toDate('2020-05-04')
+) as  day1,
+(
+    select bitmapBuild(arrayDistinct(groupArray(toUInt64(fssgvd.goodsid)))) as s2
+    from dw_hr.fct_sale_shop_good_vender_day fssgvd
+    where fssgvd.hsday = toDate('2020-05-03')
+) as day2
+select
+       bitmapCardinality(day1) as `当日`,
+       bitmapAndCardinality(day1, day2) as `留存`,
+       bitmapAndnotCardinality(day1, day2) as `流失`
   
