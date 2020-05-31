@@ -5,8 +5,98 @@
      
      3. 单个用户全属性查找
 
+技术: fastapi + clickhouse + vue + redis
 
-技术: clickhouse  bitmap
+
+数据存储: clickhouse  bitmap
+
+-----------------------------------------------------------------------------模拟数据-------------------------------------------------------------------------
+create table ch_tag_user_middle(
+    userid  UInt32,
+    tag_name String,
+    tag_value  String
+)
+engine  = MergeTree
+partition by tag_name
+order by userid;
+
+-- 用户注册标签
+insert into ch_tag_user_middle(userid, tag_name, tag_value)
+SELECT useid,'registe_time', register_time
+FROM generateRandom('useid UInt32, register_time DateTime', 1, 10, 2)
+LIMIT 50000000;
+
+insert into ch_tag_user_middle(userid, tag_name, tag_value)
+
+select ctum.userid,
+       'registe' as tag_name,
+       max(ctum.tag_value) as tag_value
+   from ch_tag_user_middle ctum
+group by ctum.userid;
+
+alter table ch_tag_user_middle drop partition 'registe_time';
+
+
+-------------------------------------------------------------------人口统计标签---------------------------------------------------------------------------
+--实名认证
+insert into ch_tag_user_middle(userid, tag_name, tag_value)
+select userid,
+       'identify',
+       1
+  from ch_tag_user_middle
+where tag_name = 'registe'
+order by rand()
+    limit 5000000;
+
+----------------------------------------------------------------------支付行为标签----------------------------------------------------------------------
+--支付金额
+alter table ch_tag_user_middle drop partition 'pay_amount';
+
+insert into ch_tag_user_middle(userid, tag_name, tag_value)
+select userid,
+       'pay_amount',
+       rand()
+  from ch_tag_user_middle
+where tag_name = 'identify'
+order by rand()
+    limit 5680903;
+----支付笔数
+alter table ch_tag_user_middle drop partition 'pay_order';
+
+insert into ch_tag_user_middle(userid, tag_name, tag_value)
+select userid,
+       'pay_order',
+       modulo(rand(), 50)
+  from ch_tag_user_middle
+where tag_name = 'pay_amount';
+
+--首次支付时间
+alter table ch_tag_user_middle drop partition 'pay_first_time';
+
+insert into ch_tag_user_middle(userid, tag_name, tag_value)
+select userid,
+       'pay_first_time',
+       toDate('2015-01-01') + modulo(rand(), 365 * 4)
+  from ch_tag_user_middle
+where tag_name = 'pay_amount';
+
+--最近支付时间
+alter table ch_tag_user_middle drop partition 'pay_last_time';
+
+insert into ch_tag_user_middle(userid, tag_name, tag_value)
+select userid,
+       'pay_last_time',
+       toDate(tag_value) + modulo(rand(), 365)
+  from ch_tag_user_middle
+where tag_name = 'pay_first_time';
+
+
+--下单笔数
+
+--下单首次时间
+
+--下单首单金额
+
 
 
 create table ch_tag_user(
