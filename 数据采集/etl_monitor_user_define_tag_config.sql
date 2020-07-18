@@ -1,0 +1,1 @@
+INSERT INTO etl_monitor.user_define_tag_config (user_tag_id, tag_name, tag_attribute, is_write, create_time, modify_time) VALUES (1, '618活动 - 裙子大促销', '', 0, '2020-06-21 09:18:56', '2020-06-21 09:19:10');
