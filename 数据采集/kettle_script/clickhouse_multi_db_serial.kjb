@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>clickhouse_multi_db_serial</name>
-  <description/>
-  <extended_description/>
-  <job_version/>
+  <description />
+  <extended_description />
+  <job_version />
   <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
@@ -70,12 +70,12 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection/>
-    <schema/>
-    <table/>
-    <size_limit_lines/>
-    <interval/>
-    <timeout_days/>
+    <connection />
+    <schema />
+    <table />
+    <size_limit_lines />
+    <interval />
+    <timeout_days />
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -183,10 +183,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection/>
-    <schema/>
-    <table/>
-    <timeout_days/>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -274,10 +274,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection/>
-    <schema/>
-    <table/>
-    <timeout_days/>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -340,13 +340,12 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file/>
+  <shared_objects_file />
   <entries>
     <entry>
       <name>START</name>
-      <description/>
+      <description />
       <type>SPECIAL</type>
-      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -360,32 +359,30 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>400</yloc>
-      <attributes_kjc/>
+      <xloc>64</xloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>get_monitor_multi_sql</name>
-      <description/>
+      <description />
       <type>TRANS</type>
-      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id/>
+      <trans_object_id />
       <filename>${Internal.Entry.Current.Directory}/get_multi_db_sql.ktr</filename>
-      <transname/>
+      <transname />
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
+      <logfile />
+      <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name/>
+      <slave_server_name />
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -398,36 +395,32 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>256</xloc>
-      <yloc>400</yloc>
-      <attributes_kjc/>
+      <xloc>160</xloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>execute_sigle_db</name>
-      <description/>
+      <description />
       <type>JOB</type>
-      <attributes/>
       <specification_method>filename</specification_method>
-      <job_object_id/>
+      <job_object_id />
       <filename>${Internal.Entry.Current.Directory}/execute_sigle_db.kjb</filename>
-      <jobname/>
-      <directory/>
+      <jobname />
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>Y</exec_per_row>
       <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
+      <logfile />
+      <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Nothing</loglevel>
-      <slave_server_name/>
+      <slave_server_name />
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
-      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
@@ -435,23 +428,21 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>400</yloc>
-      <attributes_kjc/>
+      <xloc>304</xloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>加载文件</name>
-      <description/>
+      <description />
       <type>SHELL</type>
-      <attributes/>
-      <filename/>
-      <work_directory/>
+      <filename />
+      <work_directory />
       <arg_from_previous>N</arg_from_previous>
       <exec_per_row>N</exec_per_row>
       <set_logfile>N</set_logfile>
-      <logfile/>
+      <logfile />
       <set_append_logfile>N</set_append_logfile>
-      <logext/>
+      <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
@@ -470,29 +461,27 @@ fi</script>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>976</xloc>
+      <xloc>656</xloc>
       <yloc>272</yloc>
-      <attributes_kjc/>
     </entry>
     <entry>
       <name>计算文件大小或个数</name>
-      <description/>
+      <description />
       <type>EVAL_FILES_METRICS</type>
-      <attributes/>
-      <result_filenames_wildcard/>
-      <Result_field_file/>
-      <Result_field_wildcard/>
-      <Result_field_includesubfolders/>
+      <result_filenames_wildcard />
+      <Result_field_file />
+      <Result_field_wildcard />
+      <Result_field_includesubfolders />
       <fields>
         <field>
           <source_filefolder>${J_DATA_PATH}/${J_TARGET_TABLE}/${J_TARGET_TABLE}_${J_DATE}.txt</source_filefolder>
-          <wildcard/>
+          <wildcard />
           <include_subFolders>N</include_subFolders>
         </field>
       </fields>
       <comparevalue>0</comparevalue>
-      <minvalue/>
-      <maxvalue/>
+      <minvalue />
+      <maxvalue />
       <successnumbercondition>greater</successnumbercondition>
       <source_files>files</source_files>
       <evaluation_type>size</evaluation_type>
@@ -500,23 +489,21 @@ fi</script>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>752</xloc>
-      <yloc>400</yloc>
-      <attributes_kjc/>
+      <xloc>480</xloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>检验字段的值</name>
-      <description/>
+      <description />
       <type>SIMPLE_EVAL</type>
-      <attributes/>
       <valuetype>variable</valuetype>
       <fieldname>J_TRAUNCE_FLAG</fieldname>
       <variablename>J_TRAUNCE_FLAG</variablename>
       <fieldtype>number</fieldtype>
-      <mask/>
+      <mask />
       <comparevalue>1</comparevalue>
-      <minvalue/>
-      <maxvalue/>
+      <minvalue />
+      <maxvalue />
       <successcondition>equal</successcondition>
       <successnumbercondition>greaterequal</successnumbercondition>
       <successbooleancondition>false</successbooleancondition>
@@ -524,23 +511,21 @@ fi</script>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
-      <yloc>160</yloc>
-      <attributes_kjc/>
+      <xloc>480</xloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>加载文件 2</name>
-      <description/>
+      <description />
       <type>SHELL</type>
-      <attributes/>
-      <filename/>
-      <work_directory/>
+      <filename />
+      <work_directory />
       <arg_from_previous>N</arg_from_previous>
       <exec_per_row>N</exec_per_row>
       <set_logfile>N</set_logfile>
-      <logfile/>
+      <logfile />
       <set_append_logfile>N</set_append_logfile>
-      <logext/>
+      <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
@@ -559,49 +544,42 @@ fi</script>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1200</xloc>
-      <yloc>160</yloc>
-      <attributes_kjc/>
+      <xloc>848</xloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>删除一个文件</name>
-      <description/>
+      <description />
       <type>DELETE_FILE</type>
-      <attributes/>
       <filename>${J_DATA_PATH}/${J_TARGET_TABLE}/${J_TARGET_TABLE}_${J_DATE}.txt</filename>
       <fail_if_file_not_exists>N</fail_if_file_not_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>336</xloc>
+      <xloc>208</xloc>
       <yloc>240</yloc>
-      <attributes_kjc/>
     </entry>
     <entry>
       <name>删除一个文件 2</name>
-      <description/>
+      <description />
       <type>DELETE_FILE</type>
-      <attributes/>
       <filename>${J_DATA_PATH}/${J_TARGET_TABLE}/${J_TARGET_TABLE}_${J_DATE}.txt</filename>
       <fail_if_file_not_exists>N</fail_if_file_not_exists>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1216</xloc>
+      <xloc>896</xloc>
       <yloc>400</yloc>
-      <attributes_kjc/>
     </entry>
     <entry>
       <name>成功</name>
-      <description/>
+      <description />
       <type>SUCCESS</type>
-      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1408</xloc>
+      <xloc>1088</xloc>
       <yloc>400</yloc>
-      <attributes_kjc/>
     </entry>
   </entries>
   <hops>
@@ -707,5 +685,4 @@ fi</script>
   </hops>
   <notepads>
   </notepads>
-  <attributes/>
 </job>
