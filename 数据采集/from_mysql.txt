@@ -1,7 +1,10 @@
 ------------------------------------------ 离线采集 ----------------------------------------------------
-insert into 
-select *
-  from mysql('192.168.1.104:3306', 'dw', 'test_clickhouse', 'dw', '1q2w3e')
+clickhouse-client -q "insert into xx 
+ FORMAT CustomSeparated 
+ SETTINGS format_custom_escaping_rule = 'CSV', 
+ format_custom_field_delimiter = '\$\$', 
+ format_custom_result_before_delimiter='name\$\$city\$\$age\n'"
+
   
   
   
