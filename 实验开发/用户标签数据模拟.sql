@@ -165,7 +165,7 @@
         where tag_name = 'A1007'
       group by tag_name, tag_value;
 
---A1008 问卷调查 学历
+--A1008 问卷调查 婚姻
     alter table tag_dt.ch_user_tag_info drop partition 'A1008';
     insert into tag_dt.ch_user_tag_info(userid,
                                             tag_name,
@@ -186,14 +186,14 @@
             where tag_name = 'A1008'
           group by tag_name, tag_value;
 
---A1009 问卷调查 婚姻情况
+--A1009 男女
     alter table tag_dt.ch_user_tag_info drop partition 'A1009';
     insert into tag_dt.ch_user_tag_info(userid,
                                             tag_name,
                                             tag_value)
         select  userid,
                'A1008',
-               arrayElement(['是', '否'] ,modulo(rand64(), length(['是', '否'] )))
+               arrayElement(['男', '女'] ,modulo(rand64(), length(['男', '女'] )))
           from tag_dt.ch_user_tag_info
           where tag_name = 'A1003';
     alter table tag_dt.ch_tag_user_str drop partition 'A1009';
@@ -307,7 +307,7 @@
                 where tag_name = 'A2003'
               group by tag_name, tag_value;
 
---A2004  下单总笔数
+--A2004  下单总数量
     alter table tag_dt.ch_user_tag_info drop partition 'A2004';
     insert into tag_dt.ch_user_tag_info(userid,
                                               tag_name,
@@ -347,6 +347,7 @@
         where tag_name = 'A2005'
       group by tag_name, tag_value;
 
+--A2006 最近下单时间
     alter table tag_dt.ch_user_tag_info drop partition 'A2006';
     insert into tag_dt.ch_user_tag_info(userid,
                                               tag_name,
@@ -356,6 +357,7 @@
                toDate(ctum.tag_value) + modulo(rand(), 712)
           from tag_dt.ch_user_tag_info ctum
         where ctum.tag_name = 'A2001';
+
     alter table tag_dt.ch_tag_user_date drop partition 'A2006';
     insert into tag_dt.ch_tag_user_date(label_id,
                                            label_value,
@@ -366,26 +368,29 @@
             where tag_name = 'A2006'
           group by tag_name, tag_value;
 
-alter table tag_dt.ch_user_tag_info drop partition 'A2007';
-insert into tag_dt.ch_user_tag_info(userid,
-                                          tag_name,
-                                          tag_value)
-    select ctum.userid,
-           'A2007',
-           modulo(rand(), 500)
-      from tag_dt.ch_user_tag_info ctum
-    where ctum.tag_name = 'A2001';
-alter table tag_dt.ch_tag_user_int drop partition 'A2007';
-insert into tag_dt.ch_tag_user_int(label_id,
-                                       label_value,
-                                       users)
-       select  tag_name,
-               tag_value,
-               groupBitmapState(userid)
-         from tag_dt.ch_user_tag_info
-        where tag_name = 'A2007'
-      group by tag_name, tag_value;
 
+--A2007 最近下单金额
+    alter table tag_dt.ch_user_tag_info drop partition 'A2007';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                              tag_name,
+                                              tag_value)
+        select ctum.userid,
+               'A2007',
+               modulo(rand(), 500)
+          from tag_dt.ch_user_tag_info ctum
+        where ctum.tag_name = 'A2001';
+    alter table tag_dt.ch_tag_user_int drop partition 'A2007';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                           label_value,
+                                           users)
+           select  tag_name,
+                   tag_value,
+                   groupBitmapState(userid)
+             from tag_dt.ch_user_tag_info
+            where tag_name = 'A2007'
+          group by tag_name, tag_value;
+
+--A2008 首单支付时间
     alter table tag_dt.ch_user_tag_info drop partition 'A2008';
     insert into tag_dt.ch_user_tag_info(userid,
                                           tag_name,
@@ -405,4 +410,271 @@ insert into tag_dt.ch_tag_user_int(label_id,
                    groupBitmapState(userid)
              from tag_dt.ch_user_tag_info
             where tag_name = 'A2008'
+          group by tag_name, tag_value;
+
+
+--A2009 首单支付金额
+    alter table tag_dt.ch_user_tag_info drop partition 'A2009';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                          tag_name,
+                                          tag_value)
+        select tmp1.userid,
+              'A2009',
+              tmp2.tag_value
+       from
+        (select userid
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2008') tmp1
+    semi left join     (select userid, tag_value
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2002') tmp2  on tmp1.userid = tmp2.userid;
+
+      alter table tag_dt.ch_tag_user_int drop partition 'A2009';
+        insert into tag_dt.ch_tag_user_int(label_id,
+                                               label_value,
+                                               users)
+               select  tag_name, tag_value,
+                       groupBitmapState(userid)
+                 from tag_dt.ch_user_tag_info
+                where tag_name = 'A2009'
+              group by tag_name, tag_value;
+
+--A2010 支付总笔数
+    alter table tag_dt.ch_user_tag_info drop partition 'A2010';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                          tag_name,
+                                          tag_value)
+    select tmp1.userid,
+'A2010',
+          tmp2.tag_value
+       from
+        (select userid
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2009') tmp1
+    semi left join   (select userid, tag_value
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2003') tmp2  on tmp1.userid = tmp2.userid;
+
+     alter table tag_dt.ch_tag_user_int drop partition 'A2010';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                       label_value,
+                                       users)
+       select  tag_name, tag_value,
+               groupBitmapState(userid)
+         from tag_dt.ch_user_tag_info
+        where tag_name = 'A2010'
+      group by tag_name, tag_value;
+
+
+--A2011 支付总金额
+    alter table tag_dt.ch_user_tag_info drop partition 'A2010';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                          tag_name,
+                                          tag_value)
+    select tmp1.userid,
+'A2011',
+          tmp2.tag_value
+       from
+        (select userid
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2009') tmp1
+    semi left join   (select userid, tag_value
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2005') tmp2  on tmp1.userid = tmp2.userid;
+
+     alter table tag_dt.ch_tag_user_int drop partition 'A2011';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                       label_value,
+                                       users)
+       select  tag_name, tag_value,
+               groupBitmapState(userid)
+         from tag_dt.ch_user_tag_info
+        where tag_name = 'A2011'
+      group by tag_name, tag_value;
+
+--A2012 支付总数量
+    alter table tag_dt.ch_user_tag_info drop partition 'A2012';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                          tag_name,
+                                          tag_value)
+    select tmp1.userid,
+'A2012',
+          tmp2.tag_value
+       from
+        (select userid
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2009') tmp1
+    semi left join   (select userid, tag_value
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2005') tmp2  on tmp1.userid = tmp2.userid;
+
+     alter table tag_dt.ch_tag_user_int drop partition 'A2012';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                       label_value,
+                                       users)
+       select  tag_name, tag_value,
+               groupBitmapState(userid)
+         from tag_dt.ch_user_tag_info
+        where tag_name = 'A2012'
+      group by tag_name, tag_value;
+
+--A2013 支付总数量
+    alter table tag_dt.ch_user_tag_info drop partition 'A2013';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                          tag_name,
+                                          tag_value)
+    select tmp1.userid,
+'A2013',
+          toDate(tmp2.tag_value) + modulo(rand64(), 5)
+       from
+        (select userid
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2009') tmp1
+    semi left join   (select userid, tag_value
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2006') tmp2  on tmp1.userid = tmp2.userid;
+
+     alter table tag_dt.ch_tag_user_int drop partition 'A2013';
+    insert into tag_dt.ch_tag_user_date(label_id,
+                                       label_value,
+                                       users)
+       select  tag_name, tag_value,
+               groupBitmapState(userid)
+         from tag_dt.ch_user_tag_info
+        where tag_name = 'A2013'
+      group by tag_name, tag_value;
+
+
+--A2014 最近支付金额
+    alter table tag_dt.ch_user_tag_info drop partition 'A2014';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                          tag_name,
+                                          tag_value)
+    select tmp1.userid,
+'A2014',
+            tmp2.tag_value
+       from
+        (select userid
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2009') tmp1
+    semi left join   (select userid, tag_value
+            from tag_dt.ch_user_tag_info
+        where tag_name = 'A2007') tmp2  on tmp1.userid = tmp2.userid;
+
+     alter table tag_dt.ch_tag_user_int drop partition 'A2014';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                       label_value,
+                                       users)
+       select  tag_name, tag_value,
+               groupBitmapState(userid)
+         from tag_dt.ch_user_tag_info
+        where tag_name = 'A2014'
+      group by tag_name, tag_value;
+
+--A3001 是否关注公众号
+    alter table tag_dt.ch_user_tag_info drop partition 'A3001';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                            tag_name,
+                                            tag_value)
+        select  userid,
+               'A3001',
+                 1
+          from tag_dt.ch_user_tag_info
+         where tag_name = 'A1001'
+       order by  rand() limit 949305;
+
+    alter table tag_dt.ch_tag_user_int drop partition 'A3001';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                           label_value,
+                                           users)
+           select  tag_name, tag_value,
+                   groupBitmapState(userid)
+             from tag_dt.ch_user_tag_info
+            where tag_name = 'A3001'
+          group by tag_name, tag_value;
+
+--A3002 是否下载APP
+    alter table tag_dt.ch_user_tag_info drop partition 'A3002';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                            tag_name,
+                                            tag_value)
+        select  userid,
+               'A3002',
+               1
+          from tag_dt.ch_user_tag_info
+         where tag_name = 'A1001'
+       order by  rand() limit 5949305;
+
+    alter table tag_dt.ch_tag_user_int drop partition 'A3002';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                           label_value,
+                                           users)
+           select  tag_name, tag_value,
+                   groupBitmapState(userid)
+             from tag_dt.ch_user_tag_info
+            where tag_name = 'A3002'
+          group by tag_name, tag_value;
+
+--A3003 首次签到日期
+    alter table tag_dt.ch_user_tag_info drop partition 'A3003';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                            tag_name,
+                                            tag_value)
+        select  userid,
+               'A3003',
+               toDate(tag_value)+ modulo(rand64(), 365)
+          from tag_dt.ch_user_tag_info
+         where tag_name = 'A1001'
+       order by  rand() limit 6949305;
+
+    alter table tag_dt.ch_tag_user_date drop partition 'A3003';
+    insert into tag_dt.ch_tag_user_date(label_id,
+                                           label_value,
+                                           users)
+           select  tag_name, tag_value,
+                   groupBitmapState(userid)
+             from tag_dt.ch_user_tag_info
+            where tag_name = 'A3003'
+          group by tag_name, tag_value;
+
+--A3004 最后签到日期
+    alter table tag_dt.ch_user_tag_info drop partition 'A3004';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                            tag_name,
+                                            tag_value)
+        select  userid,
+               'A3004',
+               toDate(tag_value)+ modulo(rand64(), 365)
+          from tag_dt.ch_user_tag_info
+         where tag_name = 'A3003';
+
+    alter table tag_dt.ch_tag_user_int drop partition 'A3004';
+    insert into tag_dt.ch_tag_user_int(label_id,
+                                           label_value,
+                                           users)
+           select  tag_name, tag_value,
+                   groupBitmapState(userid)
+             from tag_dt.ch_user_tag_info
+            where tag_name = 'A3004'
+          group by tag_name, tag_value;
+
+--A3005 最后登录日期
+    alter table tag_dt.ch_user_tag_info drop partition 'A3005';
+    insert into tag_dt.ch_user_tag_info(userid,
+                                            tag_name,
+                                            tag_value)
+        select  userid,
+               'A3005',
+               toDate(tag_value)+ modulo(rand64(), 365)+ modulo(rand64(), 365)
+          from tag_dt.ch_user_tag_info
+         where tag_name = 'A1001';
+
+    alter table tag_dt.ch_tag_user_date drop partition 'A3005';
+    insert into tag_dt.ch_tag_user_date(label_id,
+                                           label_value,
+                                           users)
+           select  tag_name, tag_value,
+                   groupBitmapState(userid)
+             from tag_dt.ch_user_tag_info
+            where tag_name = 'A3005'
           group by tag_name, tag_value;
