@@ -486,11 +486,12 @@
     insert into tag_dt.ch_tag_user_int(label_id,
                                        label_value,
                                        users)
-       select  tag_name, tag_value,
+       select  tag_name,
+               toInt64(tag_value) as tag_value_new,
                groupBitmapState(userid)
          from tag_dt.ch_user_tag_info
         where tag_name = 'A2011'
-      group by tag_name, tag_value;
+      group by tag_name, tag_value_new;
 
 --A2012 支付总数量
     alter table tag_dt.ch_user_tag_info drop partition 'A2012';
@@ -512,7 +513,8 @@
     insert into tag_dt.ch_tag_user_int(label_id,
                                        label_value,
                                        users)
-       select  tag_name, tag_value,
+       select  tag_name,
+               tag_value,
                groupBitmapState(userid)
          from tag_dt.ch_user_tag_info
         where tag_name = 'A2012'
@@ -561,7 +563,7 @@
             from tag_dt.ch_user_tag_info
         where tag_name = 'A2007') tmp2  on tmp1.userid = tmp2.userid;
 
-     alter table tag_dt.ch_tag_user_int drop partition 'A2014';
+    alter table tag_dt.ch_tag_user_int drop partition 'A2014';
     insert into tag_dt.ch_tag_user_int(label_id,
                                        label_value,
                                        users)
@@ -578,13 +580,13 @@
                                             tag_value)
         select  userid,
                'A3001',
-                 1
+                 '是'
           from tag_dt.ch_user_tag_info
          where tag_name = 'A1001'
        order by  rand() limit 949305;
 
-    alter table tag_dt.ch_tag_user_int drop partition 'A3001';
-    insert into tag_dt.ch_tag_user_int(label_id,
+    alter table tag_dt.ch_tag_user_str drop partition 'A3001';
+    insert into tag_dt.ch_tag_user_str(label_id,
                                            label_value,
                                            users)
            select  tag_name, tag_value,
@@ -600,13 +602,13 @@
                                             tag_value)
         select  userid,
                'A3002',
-               1
+               '是'
           from tag_dt.ch_user_tag_info
          where tag_name = 'A1001'
        order by  rand() limit 5949305;
 
-    alter table tag_dt.ch_tag_user_int drop partition 'A3002';
-    insert into tag_dt.ch_tag_user_int(label_id,
+    alter table tag_dt.ch_tag_user_str drop partition 'A3002';
+    insert into tag_dt.ch_tag_user_str(label_id,
                                            label_value,
                                            users)
            select  tag_name, tag_value,
@@ -648,8 +650,8 @@
           from tag_dt.ch_user_tag_info
          where tag_name = 'A3003';
 
-    alter table tag_dt.ch_tag_user_int drop partition 'A3004';
-    insert into tag_dt.ch_tag_user_int(label_id,
+    alter table tag_dt.ch_tag_user_date drop partition 'A3004';
+    insert into tag_dt.ch_tag_user_date(label_id,
                                            label_value,
                                            users)
            select  tag_name, tag_value,
