@@ -1,3 +1,53 @@
+create table if not exists tag_dt.ch_user_tag_info
+(
+	userid UInt32,
+	tag_name String,
+	tag_value String
+)
+engine = MergeTree PARTITION BY tag_name
+ORDER BY userid
+SETTINGS index_granularity = 8192;
+
+create table if not exists tag_dt.ch_tag_user_date
+(
+	label_id String,
+	label_value Date,
+	users AggregateFunction(groupBitmap, UInt32)
+)
+engine = AggregatingMergeTree PARTITION BY label_id
+ORDER BY (label_id, label_value)
+SETTINGS index_granularity = 8192;
+
+create table if not exists tag_dt.ch_tag_user_dicimal
+(
+	label_id String,
+	label_value Decimal(18,4),
+	users AggregateFunction(groupBitmap, UInt32)
+)
+engine = AggregatingMergeTree PARTITION BY label_id
+ORDER BY (label_id, label_value)
+SETTINGS index_granularity = 8192;
+
+create table if not exists tag_dt.ch_tag_user_int
+(
+	label_id String,
+	label_value UInt32,
+	users AggregateFunction(groupBitmap, UInt32)
+)
+engine = AggregatingMergeTree PARTITION BY label_id
+ORDER BY (label_id, label_value)
+SETTINGS index_granularity = 8192;
+
+create table if not exists tag_dt.ch_tag_user_str
+(
+	label_id String,
+	label_value String,
+	users AggregateFunction(groupBitmap, UInt32)
+)
+engine = AggregatingMergeTree PARTITION BY label_id
+ORDER BY (label_id, label_value)
+SETTINGS index_granularity = 8192;
+
 --A1001 注册日期
         alter table tag_dt.ch_user_tag_info drop partition 'A1001';
         insert into tag_dt.ch_user_tag_info(userid,
