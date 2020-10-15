@@ -16,3 +16,29 @@
           
           write_ahead_log_max_bytes: 限制wal.bin的大小，默认值为1G
           
+          
+         
+  
+数据整个写入流程:
+  In-Memory -> Compact -> Wide
+  
+  
+ 
+实验:
+  create table test_write_ahead_log(
+    a Int32,
+    b Int32,
+    c Int32
+   )
+   engine  = MergeTree
+   partition by a
+   order by  b;
+   
+分两批插入:
+ insert into test_write_ahead_log(a, b, c) values (1, 7, 3),(1, 7, 5);
+ insert into test_write_ahead_log(a, b, c) values (1, 4, 3),(1, 4, 6), (1, 4, 7), (1, 4, 7), (1, 4, 7);
+
+此时: 有 2 个目录
+
+   
+   
