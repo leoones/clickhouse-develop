@@ -39,4 +39,9 @@
   insert into test_write_ahead_log(a, b, c) values (2, 4, 3);
   insert into test_write_ahead_log(a, b, c) values (2, 5, 3);
   
-  此时目录只有个 wal.bin文件
+  此时目录只有个 wal.bin文件. 当数据行累计大于min_rows_for_compact_part 或者 数据大小大于min_bytes_for_compact_part.会自动刷新创建一个新目录
+  
+ 1.4 
+  alter table test_write_ahead_log modify SETTING  min_rows_for_wide_part = 5;
+  
+ 若单个目录下的行数小于该参数值,则只生产一个data.bin数据文件; 若大于该参数值,则生成相应的列数据文件. 字段名.bin
