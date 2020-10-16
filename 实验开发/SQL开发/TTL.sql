@@ -66,7 +66,8 @@
       
 
 ### 列 TTL
-create table ttl_20201016_delete (a Int, b Int, x Int, y Int, d DateTime) engine = MergeTree order by (a, b) ttl d + interval 1 second delete where x % 10 == 0 and y > 5;
+drop table if exists ttl_20201016_delete;
+create table if not exists ttl_20201016_delete (a Int, b Int, x Int, y Int, d DateTime) engine = MergeTree order by (a, b) ttl d + interval 1 second delete where x % 10 == 0 and y > 5;
 insert into ttl_20201016_delete values (1, 1, 0, 4, now() + 10);
 insert into ttl_20201016_delete values (1, 1, 10, 6, now());
 insert into ttl_20201016_delete values (1, 2, 3, 7, now());
