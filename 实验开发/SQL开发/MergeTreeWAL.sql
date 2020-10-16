@@ -5,7 +5,7 @@
                                      不保存在内存中，也不会写WAL。反之，则会将数据保留成In-Memory part，并同时写入WAL，在下一次发生merge时再进行flush。
                                      默认: 0
                                      
-          min_rows_for_compact_part: 一次写入的数据大小大于此值，就会按照传统方式直接向磁盘flush形成Compact part（或者Wide part），
+          min_bytes_for_compact_part: 一次写入的数据大小大于此值，就会按照传统方式直接向磁盘flush形成Compact part（或者Wide part），
                                      不保存在内存中，也不会写WAL。反之，则会将数据保留成In-Memory part，并同时写入WAL，在下一次发生merge时再进行flush。
                                      默认: 0
                                      
