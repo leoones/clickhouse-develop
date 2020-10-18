@@ -1,6 +1,7 @@
-背景: 实时同步mysql数据
+背景: 实时同步mysql数据到clickhouse
 
-
+步骤
+   1:   
 
 
 
