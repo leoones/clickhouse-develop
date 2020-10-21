@@ -21,7 +21,7 @@ ORDER BY (tag_id, tag_value)
 SETTINGS index_granularity = 8192;
 
 drop table if exists tdm_hr.ch_tag_user_int;
-create table if not exists ch_tag_user_int
+create table if not exists tdm_hr.ch_tag_user_int
 (
 	tag_id String,
 	tag_value UInt32,
@@ -32,7 +32,7 @@ ORDER BY (tag_id, tag_value)
 SETTINGS index_granularity = 8192;
 
 drop table if exists  tdm_hr.ch_tag_user_str;
-create table if not exists ch_tag_user_str
+create table if not exists tdm_hr.ch_tag_user_str
 (
 	tag_id String,
 	tag_value String,
@@ -43,12 +43,12 @@ ORDER BY (tag_id, tag_value)
 SETTINGS index_granularity = 8192;
 
 drop table if exists  tdm_hr.ch_user_tag_info;
-create table if not exists ch_user_tag_info
+create table if not exists tdm_hr.ch_user_tag_info
 (
 	userid UInt32,
 	tag_id String,
 	tag_value String,
-	INDEX  idx_userid TYPE bloom_filter granularity 1
+	INDEX  idx_userid(userid) TYPE bloom_filter granularity 1
 )
 engine = MergeTree PARTITION BY tag_id
 ORDER BY userid
@@ -57,9 +57,7 @@ SETTINGS index_granularity = 8192;
 
 
 alter table tdm_hr.ch_user_tag_info drop partition 'A1001';
-insert into tdm_hr.ch_user_tag_info(userid,
-                                                  tag_id,
-                                                  tag_value)
+insert into tdm_hr.ch_user_tag_info(userid,  tag_id, tag_value)
             SELECT useid,
                 'A1001',
                    addDays(toDate('2015-01-01') , modulo(rand64(), 1988))
@@ -80,6 +78,7 @@ insert into tdm_hr.ch_user_tag_info(userid,  tag_id,   tag_value)
                arrayElement(['QQ','WEIXIN', 'FRIENDS','ERWEIMA'],modulo(rand64(), length(['QQ','WEIXIN', 'FRIENDS','ERWEIMA'])))
           from tdm_hr.ch_user_tag_info
          where tag_id = 'A1001';
+
 alter table tdm_hr.ch_tag_user_str drop partition 'A1002';
 drop table if exists  tdm_hr.ch_tag_user_str;
 create table if not exists tdm_hr.ch_tag_user_str
@@ -129,6 +128,7 @@ insert into tdm_hr.ch_user_tag_info(userid,  tag_id,  tag_value)
                135,136,137,138,139,147,150,151,152,157,158,159,172,178,182,183,184,187,188,198])))
           from tdm_hr.ch_user_tag_info
          where tag_id = 'A1001';
+
 alter table  tdm_hr.ch_tag_user_str drop partition 'A1004';
 insert into tdm_hr.ch_tag_user_str(tag_id,  tag_value,  user_ids)
            select  tag_id, tag_value,   groupBitmapState(userid)
@@ -139,20 +139,20 @@ insert into tdm_hr.ch_tag_user_str(tag_id,  tag_value,  user_ids)
 
 --A1005  出生日期
   alter table tdm_hr.ch_user_tag_info drop partition 'A1005';
-    insert into tdm_hr.ch_user_tag_info(userid,  tag_id, tag_value)
+  insert into tdm_hr.ch_user_tag_info(userid,  tag_id, tag_value)
         select  userid,
                'A1005',
                addDays(toDate('1970-01-01'),modulo(rand(),dateDiff('day',toDate('1970-01-01'), toDate('2020-06-11'))))
-              from tag_dt.ch_user_tag_info ctum
-            where tag_name =  'A1003';
+          from tdm_hr.ch_user_tag_info ctum
+          where tag_id =  'A1003';
 
-    alter table tag_dt.ch_tag_user_date drop partition 'A1005';
-    insert into tag_dt.ch_tag_user_date(tag_id,  tag_value, user_ids)
-           select  tag_name, tag_value,
+    alter table tdm_hr.ch_tag_user_date drop partition 'A1005';
+    insert into tdm_hr.ch_tag_user_date(tag_id,  tag_value, user_ids)
+           select  tag_id, tag_value,
                    groupBitmapState(userid)
-             from tag_dt.ch_user_tag_info
-            where tag_name = 'A1005'
-          group by tag_name, tag_value;
+             from tdm_hr.ch_user_tag_info
+            where tag_id = 'A1005'
+          group by tag_id, tag_value;
 
 
 --A1006 职业
@@ -588,7 +588,7 @@ insert into tdm_hr.ch_tag_user_date(tag_id, tag_value,  user_ids)
              from tdm_hr.ch_user_tag_info
             where tag_id = 'A3003'
           group by tag_id, tag_value;
-						      
+
 alter table tdm_hr.ch_user_tag_info drop partition 'A3004';
 insert into tdm_hr.ch_user_tag_info(userid,  tag_id, tag_value)
         select  userid,
@@ -596,15 +596,15 @@ insert into tdm_hr.ch_user_tag_info(userid,  tag_id, tag_value)
                toDate(tag_value)+ modulo(rand64(), 365)
           from tdm_hr.ch_user_tag_info
          where tag_id = 'A3003';
-						      
-alter table tdm_hr.ch_tag_user_date drop partition 'A3004';						      
+
+alter table tdm_hr.ch_tag_user_date drop partition 'A3004';
 insert into tdm_hr.ch_tag_user_date(tag_id,  tag_value,  user_ids)
            select  tag_id, tag_value,
                    groupBitmapState(userid)
              from tdm_hr.ch_user_tag_info
             where tag_id = 'A3004'
           group by tag_id, tag_value;
-						      
+
 
 alter table tdm_hr.ch_user_tag_info drop partition 'A3005';
 insert into tdm_hr.ch_user_tag_info(userid, tag_id,  tag_value)
@@ -620,4 +620,4 @@ insert into tdm_hr.ch_tag_user_date(tag_id,  tag_value,  user_ids)
                    groupBitmapState(userid)
              from tdm_hr.ch_user_tag_info
             where tag_id = 'A3005'
-          group by tag_id, tag_value;				     
+          group by tag_id, tag_value;
