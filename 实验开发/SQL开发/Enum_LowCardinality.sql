@@ -231,3 +231,25 @@ select frdssvd.stat_month,
        count(distinct frdssvd.rt_shops)
   from  dw_hr.fct_rt_dc_shop_sku_vender_day_t frdssvd
 group by frdssvd.stat_month, logistics_id;			  
+
+
+--------------------------------------------------- 查询3 ----------------------------------------------------------------
+--cost:  3 s 810 ms
+select frdssvd.stat_month,
+       frdssvd.in_shop_id,
+       sum(frdssvd.rt_qty),
+       sum(frdssvd.rt_cost),
+       sum(frdssvd.rt_taxcost),
+       count(distinct frdssvd.rt_shops)
+  from  dt_test.fct_rt_dc_shop_sku_vender_day frdssvd
+group by frdssvd.stat_month, frdssvd.in_shop_id;
+
+--cost: 4 s 89 ms
+select frdssvd.stat_month,
+       frdssvd.in_shop_id,
+       sum(frdssvd.rt_qty),
+       sum(frdssvd.rt_cost),
+       sum(frdssvd.rt_taxcost),
+       count(distinct frdssvd.rt_shops)
+  from  dw_hr.fct_rt_dc_shop_sku_vender_day_t frdssvd
+group by frdssvd.stat_month, in_shop_id;
