@@ -185,3 +185,49 @@ from dw_hr.fct_rt_dc_shop_sku_vender_day_t frdssvdt
 where frdssvdt.stat_day >= toDate('2018-11-01')
   and frdssvdt.stat_day <  addMonths(toDate('2018-11-01'), 1);
 ;
+
+
+------------------------------------------------------------- 查询1 -------------------------------------------------------------
+--cost: 2 s 279 ms
+select frdssvd.stat_month,
+       frdssvd.in_shop_ytid,
+       sum(frdssvd.rt_qty),
+       sum(frdssvd.rt_cost),
+       sum(frdssvd.rt_taxcost),
+       count(distinct frdssvd.rt_shops)
+  from  dt_test.fct_rt_dc_shop_sku_vender_day frdssvd
+group by frdssvd.stat_month, frdssvd.in_shop_ytid;
+
+--cost: 3 s 442 ms
+select frdssvd.stat_month,
+        case when in_shop_ytid = 2 then '小业态'
+         when  in_shop_ytid = 5 then '配送中心'
+          else '大卖场' end  yt_name,
+       sum(frdssvd.rt_qty),
+       sum(frdssvd.rt_cost),
+       sum(frdssvd.rt_taxcost),
+       count(distinct frdssvd.rt_shops)
+  from  dw_hr.fct_rt_dc_shop_sku_vender_day_t frdssvd
+group by frdssvd.stat_month, yt_name;
+				   
+------------------------------------------------------------- 查询2 -------------------------------------------------------------				   
+--cost:  2 s 325 ms
+select frdssvd.stat_month,
+       frdssvd.logistics_id,
+       sum(frdssvd.rt_qty),
+       sum(frdssvd.rt_cost),
+       sum(frdssvd.rt_taxcost),
+       count(distinct frdssvd.rt_shops)
+  from  dt_test.fct_rt_dc_shop_sku_vender_day frdssvd
+group by frdssvd.stat_month, frdssvd.logistics_id;
+
+--cost: 3 s 567 ms
+select frdssvd.stat_month,
+         case when logistics_id in (1, 3) then '存储'
+        else '直通' end   logistics_id,
+       sum(frdssvd.rt_qty),
+       sum(frdssvd.rt_cost),
+       sum(frdssvd.rt_taxcost),
+       count(distinct frdssvd.rt_shops)
+  from  dw_hr.fct_rt_dc_shop_sku_vender_day_t frdssvd
+group by frdssvd.stat_month, logistics_id;			  
